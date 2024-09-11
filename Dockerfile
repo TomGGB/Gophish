@@ -1,5 +1,10 @@
-# Usar una imagen base de Windows Server Core o Linux con Wine si estás usando Linux
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+# Usar una imagen base de Ubuntu
+FROM ubuntu:latest
+
+# Instalar Wine
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y wine32
 
 # Crear un directorio de trabajo
 WORKDIR /gophish
@@ -7,9 +12,9 @@ WORKDIR /gophish
 # Copiar todos los archivos de la aplicación al contenedor
 COPY . .
 
-# Exponer los puertos 3333 y 8080 (o cualquier otro que uses)
+# Exponer los puertos que usa Gophish
 EXPOSE 3333
 EXPOSE 8080
 
-# Comando para ejecutar el archivo gophish.exe
-CMD ["gophish.exe"]
+# Comando para ejecutar gophish.exe con Wine
+CMD ["wine", "gophish.exe"]
