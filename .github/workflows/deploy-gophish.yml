@@ -1,0 +1,26 @@
+name: Deploy Gophish
+
+on:
+  push:
+    branches:
+      - main  # El flujo de trabajo se ejecutará cuando haya un push a la rama main.
+
+jobs:
+  deploy-gophish:
+    runs-on: windows-latest  # Ejecutar en un entorno de Windows.
+    
+    steps:
+      # Verificar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Configurar redirección de puertos para Gophish
+      - name: Configure Firewall
+        run: |
+          netsh advfirewall firewall add rule name="Allow Port 3333" dir=in action=allow protocol=TCP localport=3333
+
+      # Ejecutar Gophish
+      - name: Run Gophish
+        run: |
+          .\gophish.exe  # Ejecutar el archivo exe de Gophish
+        timeout-minutes: 60  # Ajusta el tiempo según lo que necesites
